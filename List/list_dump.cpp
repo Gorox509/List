@@ -6,6 +6,7 @@
 static FILE *open_log_file( const char *filename);
 static int  close_log_file( FILE *fp);
 static void print_divisor(  FILE *fp);
+static void list_print_error(FILE *fp, int err_code);
 
 
 void list_dump(struct list *list) {
@@ -15,6 +16,8 @@ void list_dump(struct list *list) {
     if (fp == NULL) return;
 
     print_divisor(fp);
+
+    list_print_error(fp, list_check(list));
 
     if (list == NULL) {
         fprintf(fp, "List can not be accessed\n");
@@ -46,6 +49,56 @@ void list_dump(struct list *list) {
     close_log_file(fp);
 
     return;
+}
+
+
+void list_print_error(FILE *fp, int err_code) {
+    assert(fp != NULL);
+
+    switch (err_code) {
+        case LIST_OK:
+            return;
+
+        case LIST_ALLOC_FAILED:
+            fprintf(fp, "Error: failed to allocate list\n");
+            return;
+
+        case LIST_DATA_ALLOC_FAILED:
+            fprintf(fp, "Error: failed to allocate data array\n");
+            return;
+
+        case LIST_NULL_PTR:
+            fprintf(fp, "Error: list at NULL address\n");
+            return;
+
+        case LIST_DATA_NULL_PTR:
+            fprintf(fp, "Error: list elements at NULL\n");
+            return;
+
+        case LIST_INVALID_HEAD:
+            fprintf(fp, "Error: head is invalid\n");
+            return;
+
+        case LIST_INVALID_TAIL:
+            fprintf(fp, "Error: tail is invalid\n");
+            return;
+
+        case LIST_INVALID_FIRST_FREE:
+            fprintf(fp, "Error: first free element index is invalid\n");
+            return;
+
+        case LIST_UNDERFLOW:
+            fprintf(fp, "Error: list underflow\n");
+            return;
+
+        case LIST_OVERFLOW:
+            fprintf(fp, "Error: list overflow\n");
+            return;
+
+        default:
+            fprintf(fp, "Unknown error\n");
+            return;
+    }
 }
 
 

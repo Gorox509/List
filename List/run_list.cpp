@@ -18,11 +18,11 @@ int run_list(int argc, char *argv[]) {
     struct list *list = NULL;
     make_list(&list, strtoul(argv[1], NULL, 10));
 
-    list_add(list, 0, 1);
-    list_add(list, 1, 5);
-    list_add(list, 2, 8);
-    list_add(list, 3, 13);
-    list_add(list, 4, 91);
+    list_push(list, 3);
+    list_push(list, 4);
+    list_push(list, 6);
+    list_push(list, 8);
+    list_push(list, 9);
 
     list_dump(list);
 

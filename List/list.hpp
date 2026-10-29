@@ -25,6 +25,8 @@ enum list_error {
     LIST_INVALID_TAIL,
     LIST_INVALID_HEAD,
     LIST_INVALID_FIRST_FREE,
+    LIST_UNDERFLOW,
+    LIST_OVERFLOW,
     GLIST,
 };
 
@@ -50,10 +52,13 @@ int make_list(struct list **list_ptr, size_t size);
 int list_free(struct list *list);
 
 void list_dump(struct list *list);
+int list_error(struct list *list);
 
 int list_check(struct list *list);
 
-bool list_is_last(struct list *list, short idx);
-int list_add(struct list *list, int position, list_elem_t value);
+bool list_is_last(  struct list *list, short idx);
+int list_push(      struct list *list, list_elem_t value);
+int list_pop(       struct list *list, list_elem_t *value);
+int list_insert(    struct list *list, int position, list_elem_t value);
 
 #endif

@@ -12,14 +12,24 @@ static int list_to_base_values(     struct list *list);
 int make_list(struct list **list_ptr, size_t size) {
     assert(list_ptr != NULL);
 
-    make_list_base(list_ptr);
+    int err = LIST_OK;
+
+    if ((err = make_list_base(list_ptr)) != LIST_OK) {
+        list_dump(*list_ptr);
+        return err;
+    }
 
     (*list_ptr)->size = size;
     (*list_ptr)->head = 0;
     (*list_ptr)->tail = 0;
     (*list_ptr)->free_idx = 0;
 
-    list_make_data_struct(*list_ptr);
+    if ((err = list_make_data_struct(*list_ptr)) != LIST_OK) {
+        list_dump(*list_ptr);
+        return err;
+    }
+
+    list_error(*list_ptr);
 
     return LIST_OK;
 }
@@ -31,7 +41,6 @@ int make_list_base(struct list **list_ptr) {
     struct list *list = (struct list *) malloc(sizeof(struct list));
 
     if (list == NULL) {
-        fprintf(stderr, "Error: failed to allocate list\n");
         return LIST_ALLOC_FAILED;
     }
 
@@ -46,7 +55,6 @@ int list_make_data_struct(struct list *list) {
 
     list->elems = (list_elem *) calloc(list->size, sizeof(list_elem));
     if (list->elems == NULL) {
-        fprintf(stderr, "Error: failed to allocate data array\n");
         return LIST_DATA_ALLOC_FAILED;
     }
 
