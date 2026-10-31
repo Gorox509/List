@@ -15,17 +15,16 @@ int make_list(struct list **list_ptr, size_t size) {
     int err = LIST_OK;
 
     if ((err = make_list_base(list_ptr)) != LIST_OK) {
-        list_dump(*list_ptr);
+        list_dump(*list_ptr, err);
         return err;
     }
 
     (*list_ptr)->size = size;
-    (*list_ptr)->head = 0;
-    (*list_ptr)->tail = 0;
-    (*list_ptr)->free_idx = 0;
+
+    (*list_ptr)->free_idx = 1;
 
     if ((err = list_make_data_struct(*list_ptr)) != LIST_OK) {
-        list_dump(*list_ptr);
+        list_dump(*list_ptr, err);
         return err;
     }
 
@@ -68,12 +67,14 @@ int list_to_base_values(struct list *list) {
     assert(list != NULL);
 
     list->elems[0].value = LIST_POISON;
-    list->elems[0].next_idx = 0;
-    list->elems[0].prev_idx = 0;
+    list->elems[0].next_idx = 1;
+    list->elems[0].prev_idx = 1;
 
     for (size_t idx = 1; idx < list->size; ++idx) {
         list->elems[idx] = LIST_BASE_VALUE;
+        list->elems[idx].prev_idx = (idx + 1);
     }
+    list->elems[list->size - 1].prev_idx = 0;
 
     return LIST_OK;
 }

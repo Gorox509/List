@@ -1,6 +1,6 @@
 #include "list.hpp"
 #include <assert.h>
-#include <cstdlib>
+#include <stdio.h>
 
 
 static int run_list(int argc, char *argv[]);
@@ -18,13 +18,21 @@ int run_list(int argc, char *argv[]) {
     struct list *list = NULL;
     make_list(&list, strtoul(argv[1], NULL, 10));
 
-    list_push(list, 3);
-    list_push(list, 4);
-    list_push(list, 6);
-    list_push(list, 8);
-    list_push(list, 9);
+    list_push_back(list, 3);
+    list_push_back(list, 4);
+    list_push_back(list, 6);
+    list_push_back(list, 8);
+    list_push_back(list, 9);
 
-    list_dump(list);
+    ssize_t value = 0;
+    list_pop_back(list, &value);
+    fprintf(stderr, "%zd\n", value);
+
+    value = 0;
+    list_pop_back(list, &value);
+    fprintf(stderr, "%zd\n", value);
+
+    list_dump(list, LIST_OK);
 
     list_free(list);
 

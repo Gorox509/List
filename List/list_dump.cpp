@@ -9,7 +9,7 @@ static void print_divisor(  FILE *fp);
 static void list_print_error(FILE *fp, int err_code);
 
 
-void list_dump(struct list *list) {
+void list_dump(struct list *list, int error) { // TODO: get error
     size_t idx = 0;
 
     FILE *fp = open_log_file("list_log.log");
@@ -17,7 +17,7 @@ void list_dump(struct list *list) {
 
     print_divisor(fp);
 
-    list_print_error(fp, list_check(list));
+    list_print_error(fp, error);
 
     if (list == NULL) {
         fprintf(fp, "List can not be accessed\n");
@@ -27,9 +27,7 @@ void list_dump(struct list *list) {
     fprintf(fp, "Dumping list structure:\n");
 
     fprintf(fp, "Size: %zu\n", list->size);
-    fprintf(fp, "Head: %d\n",  list->head);
-    fprintf(fp, "Tail: %d\n",  list->tail);
-    fprintf(fp, "Free: %d\n",  list->free_idx);
+    fprintf(fp, "Free: %zu\n",  list->free_idx);
 
     fprintf(fp, "\nList data at [%p]:\n", list->elems);
 
@@ -39,8 +37,8 @@ void list_dump(struct list *list) {
 
     fprintf(fp, "%10s%10s%10s%10s\n", "idx", "data", "next_idx", "prev_idx");
 
-    while (idx < list->size && !list_is_last(list, (short) idx)) {
-        fprintf(fp, "%10zu%10d%10d%10d\n", idx, list->elems[idx].value, list->elems[idx].next_idx, list->elems[idx].prev_idx);
+    while (idx < list->size) {
+        fprintf(fp, "%10zu%10zd%10zu%10zu\n", idx, list->elems[idx].value, list->elems[idx].next_idx, list->elems[idx].prev_idx);
         ++idx;
     }
 
@@ -93,6 +91,10 @@ void list_print_error(FILE *fp, int err_code) {
 
         case LIST_OVERFLOW:
             fprintf(fp, "Error: list overflow\n");
+            return;
+
+        case LIST_INVALID_TERMINATOR:
+            fprintf(fp, "Error: list terminator element is wrong\n");
             return;
 
         default:
