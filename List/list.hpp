@@ -11,6 +11,15 @@
 #define LIST_BASE_VALUE {LIST_POISON, LIST_NO_NEXT, LIST_NO_PREV}
 #define LIST_POISON -67
 
+#define HEAD(list) (list)->elems[0].prev_idx
+#define TAIL(list) (list)->elems[0].next_idx
+#define FREE(list) (list)->free_idx
+
+#define NEXT(list, num)  (list)->elems[(num)].next_idx
+#define PREV(list, num)  (list)->elems[(num)].prev_idx
+#define VALUE(list, num) (list)->elems[(num)].value
+
+#define EXIT_ERR(...) { int err = 0; if ((err = __VA_ARGS__) != LIST_OK) exit(err); }
 #define CHECK_ERR(...) { int err = 0; if ((err = __VA_ARGS__) != LIST_OK) return err; }
 
 typedef ssize_t list_elem_t;

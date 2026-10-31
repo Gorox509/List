@@ -27,7 +27,7 @@ void list_dump(struct list *list, int error) { // TODO: get error
     fprintf(fp, "Dumping list structure:\n");
 
     fprintf(fp, "Size: %zu\n", list->size);
-    fprintf(fp, "Free: %zu\n",  list->free_idx);
+    fprintf(fp, "Free: %zu\n", FREE(list));
 
     fprintf(fp, "\nList data at [%p]:\n", list->elems);
 
@@ -38,7 +38,7 @@ void list_dump(struct list *list, int error) { // TODO: get error
     fprintf(fp, "%10s%10s%10s%10s\n", "idx", "data", "next_idx", "prev_idx");
 
     while (idx < list->size) {
-        fprintf(fp, "%10zu%10zd%10zu%10zu\n", idx, list->elems[idx].value, list->elems[idx].next_idx, list->elems[idx].prev_idx);
+        fprintf(fp, "%10zu%10zd%10zu%10zu\n", idx, VALUE(list, idx), NEXT(list, idx), PREV(list, idx));
         ++idx;
     }
 

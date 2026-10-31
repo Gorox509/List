@@ -67,14 +67,14 @@ int list_to_base_values(struct list *list) {
     assert(list != NULL);
 
     list->elems[0].value = LIST_POISON;
-    list->elems[0].next_idx = 1;
-    list->elems[0].prev_idx = 1;
+    TAIL(list) = 1;
+    HEAD(list) = 1;
 
     for (size_t idx = 1; idx < list->size; ++idx) {
         list->elems[idx] = LIST_BASE_VALUE;
-        list->elems[idx].prev_idx = (idx + 1);
+        PREV(list, idx) = (idx + 1);
     }
-    list->elems[list->size - 1].prev_idx = 0;
+    PREV(list, list->size - 1) = 0;
 
     return LIST_OK;
 }
