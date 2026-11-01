@@ -21,9 +21,9 @@ int list_check(struct list *list) {
         return LIST_DATA_NULL_PTR;
     if (list->size < 1)
         return LIST_UNDERFLOW;
-    if (list->size <= TAIL(list) || TAIL(list) < 1)
+    if (list->size <= TAIL(list) || TAIL(list) < 0)
         return LIST_INVALID_TAIL;
-    if (list->size <= HEAD(list) || HEAD(list) < 1)
+    if (list->size <= HEAD(list) || HEAD(list) < 0)
         return LIST_INVALID_HEAD;
     if (list->size <= FREE(list))
         return LIST_INVALID_FIRST_FREE;
@@ -95,8 +95,26 @@ int list_pop_back(struct list *list, list_elem_t *value) {
 
 
 int list_push(struct list *list, size_t position, list_elem_t value) {
-    list_error(list);
+    EXIT_ERR(list_error(list));
 
+    if (position < 1 || position >= list->size)
+        return LIST_CANT_PUSH;
+    if (FREE(list) == 0)
+        return LIST_OVERFLOW;
+
+    HEAD(list) = FREE(list);
+    EXIT_ERR(list_error(list));
+    FREE(list) = PREV(list, FREE(list));
+    EXIT_ERR(list_error(list));
+
+    PREV(list, NEXT(list, position)) = HEAD(list);
+
+    NEXT(list, HEAD(list)) = NEXT(list, position);
+    NEXT(list, position) = HEAD(list);
+    VALUE(list, HEAD(list)) = value;
+    PREV(list, HEAD(list)) = position;
+
+    EXIT_ERR(list_error(list));
 
     return LIST_OK;
 }

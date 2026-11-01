@@ -67,8 +67,8 @@ int list_to_base_values(struct list *list) {
     assert(list != NULL);
 
     list->elems[0].value = LIST_POISON;
-    TAIL(list) = 1;
-    HEAD(list) = 1;
+    TAIL(list) = 0;
+    HEAD(list) = 0;
 
     for (size_t idx = 1; idx < list->size; ++idx) {
         list->elems[idx] = LIST_BASE_VALUE;

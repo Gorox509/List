@@ -37,6 +37,7 @@ enum list_error { // TODO: to define
     LIST_UNDERFLOW,
     LIST_OVERFLOW,
     LIST_INVALID_TERMINATOR,
+    LIST_CANT_PUSH,
     GLIST,
 };
 
