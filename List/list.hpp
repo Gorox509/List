@@ -25,21 +25,21 @@
 typedef ssize_t list_elem_t;
 
 
-enum list_error { // TODO: to define
-    LIST_OK = 0,
-    LIST_ALLOC_FAILED,
-    LIST_DATA_ALLOC_FAILED,
-    LIST_NULL_PTR,
-    LIST_DATA_NULL_PTR,
-    LIST_INVALID_TAIL,
-    LIST_INVALID_HEAD,
-    LIST_INVALID_FIRST_FREE,
-    LIST_UNDERFLOW,
-    LIST_OVERFLOW,
-    LIST_INVALID_TERMINATOR,
-    LIST_CANT_PUSH,
-    GLIST,
-};
+
+#define    LIST_OK                  0
+#define    LIST_ALLOC_FAILED        1
+#define    LIST_DATA_ALLOC_FAILED   2
+#define    LIST_NULL_PTR            3
+#define    LIST_DATA_NULL_PTR       4
+#define    LIST_INVALID_TAIL        5
+#define    LIST_INVALID_HEAD        6
+#define    LIST_INVALID_FIRST_FREE  7
+#define    LIST_UNDERFLOW           8
+#define    LIST_OVERFLOW            9
+#define    LIST_INVALID_TERMINATOR  10
+#define    LIST_CANT_PUSH           11
+#define    LIST_CANT_POP            12
+
 
 
 struct list_elem {
@@ -63,11 +63,17 @@ int list_free(struct list *list);
 void list_dump(struct list *list, int error);
 int list_error(struct list *list);
 
+int list_dump_to_graphviz(struct list *list);
+
 int list_check(struct list *list);
 
 bool list_is_last(  struct list *list, size_t idx);
+bool list_is_free_element(struct list *list, size_t idx);
 int list_push_back( struct list *list, list_elem_t value);
 int list_pop_back(  struct list *list, list_elem_t *value);
 int list_push(      struct list *list, size_t position, list_elem_t value);
+int pop(            struct list *list, size_t position, list_elem_t *value);
+
+
 
 #endif

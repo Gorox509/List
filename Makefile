@@ -16,9 +16,9 @@ CFLAGS=-ggdb3 -std=c++17 -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations 
 DEFINES=-D LIST_DEBUG
 
 
-all: make_list.o list.o run_list.o list_dump.o
-	@$(CC) $(CFLAGS) $(DEFINES) make_list.o list.o run_list.o list_dump.o -o list.out
-	@rm -f make_list.o list.o run_list.o list_dump.o
+all: make_list.o list.o run_list.o list_dump.o list_to_graphviz.o
+	@$(CC) $(CFLAGS) $(DEFINES) make_list.o list.o run_list.o list_dump.o list_to_graphviz.o -o list.out
+	@rm -f make_list.o list.o run_list.o list_dump.o list_to_graphviz.o
 
 make_list.o:
 	@$(CC) $(CFLAGS) $(DEFINES) -c List/make_list.cpp -o make_list.o
@@ -31,3 +31,6 @@ run_list.o:
 
 list_dump.o:
 	@$(CC) $(CFLAGS) $(DEFINES) -c List/list_dump.cpp -o list_dump.o
+
+list_to_graphviz.o:
+	@$(CC) $(CFLAGS) $(DEFINES) -c List/list_to_graphviz.cpp -o list_to_graphviz.o

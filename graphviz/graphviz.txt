@@ -1,0 +1,17 @@
+digraph G {
+rankdir=TB;
+node[fontsize=12];
+node0[ color = red , shape = Mrecord , label = "{ index = 0 | value = -67 | next = 1 | prev = 3 }" ]
+node1[ color = red , shape = Mrecord , label = "{ index = 1 | value = 3 | next = 2 | prev = 0 }" ];
+node0->node1[color="white"]
+node2[ color = red , shape = Mrecord , label = "{ index = 2 | value = 4 | next = 3 | prev = 1 }" ];
+node1->node2[color="white"]
+node3[ color = red , shape = Mrecord , label = "{ index = 3 | value = 6 | next = 0 | prev = 2 }" ];
+node2->node3[color="white"]
+node4[ color = red , shape = Mrecord , label = "{ index = 4 | value = -67 | next = 7676 | prev = 5 }" ];
+node5[ color = red , shape = Mrecord , label = "{ index = 5 | value = -67 | next = 7676 | prev = 0 }" ];
+node0->node1->node2->node3;
+node4->node4
+->node5
+[color="white"];
+}

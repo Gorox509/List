@@ -21,9 +21,9 @@ int list_check(struct list *list) {
         return LIST_DATA_NULL_PTR;
     if (list->size < 1)
         return LIST_UNDERFLOW;
-    if (list->size <= TAIL(list) || TAIL(list) < 0)
+    if (list->size <= TAIL(list))
         return LIST_INVALID_TAIL;
-    if (list->size <= HEAD(list) || HEAD(list) < 0)
+    if (list->size <= HEAD(list))
         return LIST_INVALID_HEAD;
     if (list->size <= FREE(list))
         return LIST_INVALID_FIRST_FREE;
@@ -38,6 +38,16 @@ bool list_is_last(struct list *list, size_t idx) {
     list_error(list);
 
     if (list->elems[idx].next_idx == 0) return true;
+    return false;
+}
+
+
+bool list_is_free_element(struct list *list, size_t idx) {
+    EXIT_ERR(list_error(list));
+
+    if (VALUE(list, idx) == LIST_POISON && NEXT(list, idx) == LIST_NO_NEXT)
+        return true;
+
     return false;
 }
 
@@ -113,6 +123,30 @@ int list_push(struct list *list, size_t position, list_elem_t value) {
     NEXT(list, position) = HEAD(list);
     VALUE(list, HEAD(list)) = value;
     PREV(list, HEAD(list)) = position;
+
+    EXIT_ERR(list_error(list));
+
+    return LIST_OK;
+}
+
+
+int pop(struct list *list, size_t position, list_elem_t *value) { // TODO: not finished
+    EXIT_ERR(list_error(list));
+
+    if (position < 1 || position >= list->size)
+        return LIST_CANT_POP;
+
+    if (value != NULL)
+        *value = VALUE(list, position);
+
+    VALUE(list, position) = LIST_POISON;
+    NEXT(list, PREV(list, position)) = 0;
+    NEXT(list, position) = LIST_NO_NEXT;
+
+    PREV(list, position) = FREE(list);
+    FREE(list) = position;
+
+    HEAD(list) = PREV(list, position);
 
     EXIT_ERR(list_error(list));
 

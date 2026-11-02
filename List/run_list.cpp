@@ -22,9 +22,9 @@ int run_list(int argc, char *argv[]) {
     list_push_back(list, 3);
     list_push_back(list, 4);
     list_push_back(list, 6);
-    list_push_back(list, 8);
+    //list_push_back(list, 8);
     //list_push_back(list, 9);
-    list_push(list, 2, 9);
+    //list_push(list, 2, 9);
 
     ssize_t value = 0;
     //list_pop_back(list, &value);
@@ -35,6 +35,7 @@ int run_list(int argc, char *argv[]) {
     fprintf(stderr, "%zd\n", value);
 
     list_dump(list, LIST_OK);
+    list_dump_to_graphviz(list);
 
     list_free(list);
 
