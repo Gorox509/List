@@ -74,6 +74,7 @@ int graphviz_print_params(FILE *fp) {
 
     fprintf(fp, "rankdir=TB;\n");
     fprintf(fp, "node[fontsize=12];\n");
+    fprintf(fp, "splines=ortho;\n");
 
     return GRAPHVIZ_LIST_OK;
 }
@@ -83,32 +84,35 @@ int graphviz_print_nodes(FILE *fp, struct list *list) {
     assert(fp != NULL);
     EXIT_ERR(list_error(list));
 
-    fprintf(fp, "node%zu[ color = red , shape = Mrecord , label = \"{ index = 0 | value = %zd | next = %zu | prev = %zu }\" ]\n",
+    fprintf(fp, "node%zu[ color = red , shape = Mrecord , label = \"{ <idx> index = 0 | value = %zd | { <next> next = %zu | <prev> prev = %zu } }\" ];\n",
             0LU, VALUE(list, 0), TAIL(list), HEAD(list));
 
     for (size_t idx = 1; idx < list->size; ++idx) {
-        fprintf(fp, "node%zu[ color = red , shape = Mrecord , label = \"{ index = %zu | value = %zd | next = %zu | prev = %zu }\" ];\n",
+        fprintf(fp, "node%zu[ color = red , shape = Mrecord , label = \"{ <idx> index = %zu | value = %zd | { <next> next = %zu | <prev> prev = %zu } }\" ];\n",
                 idx, idx, list->elems[idx].value, list->elems[idx].next_idx, list->elems[idx].prev_idx);
 
-        if (!list_is_free_element(list, idx)) // TODO: not reliable
-            fprintf(fp, "node%zu->node%zu[color=\"white\"]\n", idx - 1, idx);
+        if (!list_is_free_element(list, idx)) {// TODO: not reliable
+            fprintf(fp, "node%zu->node%zu[color=\"white\", weight=100000];\n", idx - 1, idx);
+        }
     }
 
 
-    fprintf(fp, "node0");
+    fprintf(fp, "node0:<next>");
     for (size_t idx = 1; idx < list->size; ++idx) {
-        if (!list_is_free_element(list, idx))
-            fprintf(fp, "->node%zu", idx);
+        if (!list_is_free_element(list, idx)) {
+            fprintf(fp, "->node%zu:<idx>[color=\"black\"];\n", idx);
+            fprintf(fp, "node%zu:<next>", idx);
+        }
     }
     fputc(';', fp);
     fputc('\n', fp);
 
     if (FREE(list) != 0) {
-        fprintf(fp, "node%zu", FREE(list));
+        fprintf(fp, "node%zu:<prev>", FREE(list));
         for (size_t cnt = 0, idx = FREE(list); idx != 0 && cnt < list->size; ++cnt, idx = PREV(list, idx)) {
-            fprintf(fp, "->node%zu\n", idx);
+            fprintf(fp, "->node%zu:<idx>[color=\"white\", weight=100000];\n", idx);
+            fprintf(fp, "node%zu:<prev>", idx);
         }
-        fprintf(fp, "[color=\"white\"];");
     }
     fputc('\n', fp);
 
