@@ -19,9 +19,9 @@ int make_list(struct list **list_ptr, size_t size) {
         return err;
     }
 
-    (*list_ptr)->size = size;
+    SIZE(*list_ptr) = size;
 
-    (*list_ptr)->free_idx = 1;
+    FREE(*list_ptr) = 1;
 
     if ((err = list_make_data_struct(*list_ptr)) != LIST_OK) {
         list_dump(*list_ptr, err);
@@ -52,8 +52,8 @@ int make_list_base(struct list **list_ptr) {
 int list_make_data_struct(struct list *list) {
     assert(list != NULL);
 
-    list->elems = (list_elem *) calloc(list->size, sizeof(list_elem));
-    if (list->elems == NULL) {
+    DATA(list) = (list_elem *) calloc(SIZE(list), sizeof(list_elem));
+    if (DATA(list) == NULL) {
         return LIST_DATA_ALLOC_FAILED;
     }
 
@@ -66,15 +66,15 @@ int list_make_data_struct(struct list *list) {
 int list_to_base_values(struct list *list) {
     assert(list != NULL);
 
-    list->elems[0].value = LIST_POISON;
+    VALUE(list, 0) = LIST_POISON;
     TAIL(list) = 0;
     HEAD(list) = 0;
 
-    for (size_t idx = 1; idx < list->size; ++idx) {
-        list->elems[idx] = LIST_BASE_VALUE;
+    for (size_t idx = 1; idx < SIZE(list); ++idx) {
+        DATA(list)[idx] = LIST_BASE_VALUE;
         PREV(list, idx) = (idx + 1);
     }
-    PREV(list, list->size - 1) = 0;
+    PREV(list, SIZE(list) - 1) = 0;
 
     return LIST_OK;
 }
@@ -83,7 +83,7 @@ int list_to_base_values(struct list *list) {
 int list_free(struct list *list) {
     assert(list != NULL);
 
-    free(list->elems);
+    free(DATA(list));
     free(list);
 
     return LIST_OK;

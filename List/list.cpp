@@ -17,17 +17,17 @@ int list_error(struct list *list) {
 int list_check(struct list *list) {
     if (list == NULL)
         return LIST_NULL_PTR;
-    if (list->elems == NULL)
+    if (DATA(list) == NULL)
         return LIST_DATA_NULL_PTR;
-    if (list->size < 1)
+    if (SIZE(list) < 1)
         return LIST_UNDERFLOW;
-    if (list->size <= TAIL(list))
+    if (SIZE(list) <= TAIL(list))
         return LIST_INVALID_TAIL;
-    if (list->size <= HEAD(list))
+    if (SIZE(list) <= HEAD(list))
         return LIST_INVALID_HEAD;
-    if (list->size <= FREE(list))
+    if (SIZE(list) <= FREE(list))
         return LIST_INVALID_FIRST_FREE;
-    if (list->elems[0].value != LIST_POISON)
+    if (VALUE(list, 0) != LIST_POISON)
         return LIST_INVALID_TERMINATOR;
 
     return LIST_OK;
@@ -37,7 +37,7 @@ int list_check(struct list *list) {
 bool list_is_last(struct list *list, size_t idx) {
     list_error(list);
 
-    if (list->elems[idx].next_idx == 0) return true;
+    if (NEXT(list, idx) == 0) return true;
     return false;
 }
 
@@ -107,7 +107,7 @@ int list_pop_back(struct list *list, list_elem_t *value) {
 int list_push(struct list *list, size_t position, list_elem_t value) {
     EXIT_ERR(list_error(list));
 
-    if (position < 1 || position >= list->size)
+    if (position < 1 || position >= SIZE(list))
         return LIST_CANT_PUSH;
     if (FREE(list) == 0)
         return LIST_OVERFLOW;
@@ -133,7 +133,7 @@ int list_push(struct list *list, size_t position, list_elem_t value) {
 int pop(struct list *list, size_t position, list_elem_t *value) { // TODO: not finished
     EXIT_ERR(list_error(list));
 
-    if (position < 1 || position >= list->size)
+    if (position < 1 || position >= SIZE(list))
         return LIST_CANT_POP;
 
     if (value != NULL)

@@ -26,18 +26,18 @@ void list_dump(struct list *list, int error) { // TODO: get error
 
     fprintf(fp, "Dumping list structure:\n");
 
-    fprintf(fp, "Size: %zu\n", list->size);
+    fprintf(fp, "Size: %zu\n", SIZE(list));
     fprintf(fp, "Free: %zu\n", FREE(list));
 
-    fprintf(fp, "\nList data at [%p]:\n", list->elems);
+    fprintf(fp, "\nList data at [%p]:\n", DATA(list));
 
-    if (list->elems == NULL) {
+    if (DATA(list) == NULL) {
         fprintf(fp, "Can not print list elements\n");
     }
 
     fprintf(fp, "%10s%10s%10s%10s\n", "idx", "data", "next_idx", "prev_idx");
 
-    while (idx < list->size) {
+    while (idx < SIZE(list)) {
         fprintf(fp, "%10zu%10zd%10zu%10zu\n", idx, VALUE(list, idx), NEXT(list, idx), PREV(list, idx));
         ++idx;
     }

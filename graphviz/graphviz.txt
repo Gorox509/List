@@ -1,7 +1,7 @@
 digraph G {
 rankdir=TB;
 node[fontsize=12];
-splines="ortho";
+splines=ortho;
 node0[ color = red , shape = Mrecord , label = "{ <idx> index = 0 | value = -67 | { <next> next = 1 | <prev> prev = 3 } }" ];
 node1[ color = red , shape = Mrecord , label = "{ <idx> index = 1 | value = 3 | { <next> next = 2 | <prev> prev = 0 } }" ];
 node0->node1[color="white", weight=100000];
