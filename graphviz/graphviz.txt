@@ -1,5 +1,5 @@
 digraph G {
-rankdir=LR;
+rankdir=TB;
 node[fontsize=12];
 splines=ortho;
 node0[ color = black , style = filled , fillcolor = whitesmoke, shape = Mrecord , label = "{ <idx> index = 0 | value = -67 | { <next> next = 4 | <prev> prev = 1 } }" ];
@@ -8,7 +8,7 @@ node0->node1[color="white", weight=100000];
 node2[ color = red , style = filled, fillcolor = whitesmoke, shape = Mrecord , label = "{ <idx> index = 2 | value = -67 | { <next> next = 7676 | <prev> prev = 5 } }" ];
 node3[ color = red , style = filled, fillcolor = whitesmoke, shape = Mrecord , label = "{ <idx> index = 3 | value = -67 | { <next> next = 7676 | <prev> prev = 2 } }" ];
 node4[ color = darkgreen , style = filled, fillcolor = lightgreen, shape = Mrecord , label = "{ <idx> index = 4 | value = 9 | { <next> next = 1 | <prev> prev = 0 } }" ];
-node3->node4[color="white", weight=100000];
+node1->node4[color="white", weight=100000];
 node5[ color = red , style = filled, fillcolor = whitesmoke, shape = Mrecord , label = "{ <idx> index = 5 | value = -67 | { <next> next = 7676 | <prev> prev = 6 } }" ];
 node6[ color = red , style = filled, fillcolor = whitesmoke, shape = Mrecord , label = "{ <idx> index = 6 | value = -67 | { <next> next = 7676 | <prev> prev = 0 } }" ];
 node0:<idx>->node4:<idx>[color="green", dir=both];

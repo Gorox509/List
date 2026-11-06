@@ -100,13 +100,14 @@ int graphviz_print(FILE *fp, struct list *list) {
 }
 
 
-int graphviz_print_nodes(FILE *fp, struct list *list) {
+int graphviz_print_nodes(FILE *fp, struct list *list) { // TODO: fix white edges
     assert(fp != NULL);
     EXIT_ERR(list_error(list));
 
     fprintf(fp, "node%zu[ color = black , style = filled , fillcolor = whitesmoke, shape = Mrecord , label = \"{ <idx> index = 0 | value = %zd | { <next> next = %zu | <prev> prev = %zu } }\" ];\n",
             0LU, VALUE(list, 0), TAIL(list), HEAD(list));
 
+    size_t prev_not_free = 0;
     for (size_t idx = 1; idx < SIZE(list); ++idx) {
         const char *color = NULL, *fillcolor = NULL;
         bool elem_is_free = list_is_free_element(list, idx);
@@ -122,7 +123,8 @@ int graphviz_print_nodes(FILE *fp, struct list *list) {
                 idx, color, fillcolor, idx, VALUE(list, idx), NEXT(list, idx), PREV(list, idx));
 
         if (!list_is_free_element(list, idx)) {
-            fprintf(fp, "node%zu->node%zu[color=\"white\", weight=100000];\n", idx - 1, idx);
+            fprintf(fp, "node%zu->node%zu[color=\"white\", weight=100000];\n", prev_not_free, idx);
+            prev_not_free = idx;
         }
     }
 
