@@ -1,21 +1,22 @@
 digraph G {
-rankdir=TB;
+rankdir=LR;
 node[fontsize=12];
 splines=ortho;
-node0[ color = red , shape = Mrecord , label = "{ <idx> index = 0 | value = -67 | { <next> next = 1 | <prev> prev = 3 } }" ];
-node1[ color = red , shape = Mrecord , label = "{ <idx> index = 1 | value = 3 | { <next> next = 2 | <prev> prev = 0 } }" ];
+node0[ color = black , style = filled , fillcolor = whitesmoke, shape = Mrecord , label = "{ <idx> index = 0 | value = -67 | { <next> next = 4 | <prev> prev = 1 } }" ];
+node1[ color = darkgreen , style = filled, fillcolor = lightgreen, shape = Mrecord , label = "{ <idx> index = 1 | value = 3 | { <next> next = 0 | <prev> prev = 4 } }" ];
 node0->node1[color="white", weight=100000];
-node2[ color = red , shape = Mrecord , label = "{ <idx> index = 2 | value = 4 | { <next> next = 3 | <prev> prev = 1 } }" ];
-node1->node2[color="white", weight=100000];
-node3[ color = red , shape = Mrecord , label = "{ <idx> index = 3 | value = 6 | { <next> next = 0 | <prev> prev = 2 } }" ];
-node2->node3[color="white", weight=100000];
-node4[ color = red , shape = Mrecord , label = "{ <idx> index = 4 | value = -67 | { <next> next = 7676 | <prev> prev = 5 } }" ];
-node5[ color = red , shape = Mrecord , label = "{ <idx> index = 5 | value = -67 | { <next> next = 7676 | <prev> prev = 0 } }" ];
-node0:<next>->node1:<idx>[color="black"];
-node1:<next>->node2:<idx>[color="black"];
-node2:<next>->node3:<idx>[color="black"];
-node3:<next>;
-node4:<prev>->node4:<idx>[color="white", weight=100000];
-node4:<prev>->node5:<idx>[color="white", weight=100000];
-node5:<prev>
+node2[ color = red , style = filled, fillcolor = whitesmoke, shape = Mrecord , label = "{ <idx> index = 2 | value = -67 | { <next> next = 7676 | <prev> prev = 5 } }" ];
+node3[ color = red , style = filled, fillcolor = whitesmoke, shape = Mrecord , label = "{ <idx> index = 3 | value = -67 | { <next> next = 7676 | <prev> prev = 2 } }" ];
+node4[ color = darkgreen , style = filled, fillcolor = lightgreen, shape = Mrecord , label = "{ <idx> index = 4 | value = 9 | { <next> next = 1 | <prev> prev = 0 } }" ];
+node3->node4[color="white", weight=100000];
+node5[ color = red , style = filled, fillcolor = whitesmoke, shape = Mrecord , label = "{ <idx> index = 5 | value = -67 | { <next> next = 7676 | <prev> prev = 6 } }" ];
+node6[ color = red , style = filled, fillcolor = whitesmoke, shape = Mrecord , label = "{ <idx> index = 6 | value = -67 | { <next> next = 7676 | <prev> prev = 0 } }" ];
+node0:<idx>->node4:<idx>[color="green", dir=both];
+node4:<idx>->node1:<idx>[color="green", dir=both];
+node1:<idx>;
+node0:<idx>;
+node3->node2[color="white", weight=100000];
+node2->node5[color="white", weight=100000];
+node5->node6[color="white", weight=100000];
+node6
 }

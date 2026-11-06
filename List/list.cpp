@@ -1,5 +1,6 @@
 #include "list.hpp"
 #include <assert.h>
+#include <cstdio>
 
 
 int list_error(struct list *list) {
@@ -52,54 +53,17 @@ bool list_is_free_element(struct list *list, size_t idx) {
 }
 
 
-int list_push_back(struct list *list, list_elem_t value) { // OK
+int list_push_back(struct list *list, list_elem_t value) {
     EXIT_ERR(list_error(list));
 
-    if (FREE(list) == 0)
-        return LIST_OVERFLOW;
-
-    size_t head = HEAD(list);
-
-    HEAD(list) = FREE(list);
-    EXIT_ERR(list_error(list));
-    FREE(list) = PREV(list, HEAD(list));
-    EXIT_ERR(list_error(list));
-
-    NEXT(list, head) = HEAD(list);
-
-    NEXT(list, HEAD(list)) = 0;
-    VALUE(list, HEAD(list)) = value;
-    PREV(list, HEAD(list)) = head;
-
-    EXIT_ERR(list_error(list));
-
-    return LIST_OK;
+    return list_push(list, HEAD(list), value);
 }
 
 
 int list_pop_back(struct list *list, list_elem_t *value) {
     EXIT_ERR(list_error(list));
 
-    if (FREE(list) == HEAD(list) || FREE(list) == TAIL(list))
-        return LIST_UNDERFLOW;
-
-    if (value != NULL)
-        *value = VALUE(list, HEAD(list));
-
-    size_t new_head = PREV(list, HEAD(list));
-
-    VALUE(list, HEAD(list)) = LIST_POISON;
-    NEXT(list, PREV(list, HEAD(list))) = 0;
-    NEXT(list, HEAD(list)) = LIST_NO_NEXT;
-
-    PREV(list, HEAD(list)) = FREE(list);
-    FREE(list) = HEAD(list);
-
-    HEAD(list) = new_head;
-
-    EXIT_ERR(list_error(list));
-
-    return LIST_OK;
+    return list_pop(list, HEAD(list), value);
 }
 
 
@@ -107,22 +71,24 @@ int list_pop_back(struct list *list, list_elem_t *value) {
 int list_push(struct list *list, size_t position, list_elem_t value) {
     EXIT_ERR(list_error(list));
 
-    if (position < 1 || position >= SIZE(list))
+    if (position >= SIZE(list) - 2)
         return LIST_CANT_PUSH;
     if (FREE(list) == 0)
         return LIST_OVERFLOW;
 
-    HEAD(list) = FREE(list);
+    size_t idx_to_push_into = FREE(list);
+
+    idx_to_push_into = FREE(list);
     EXIT_ERR(list_error(list));
     FREE(list) = PREV(list, FREE(list));
     EXIT_ERR(list_error(list));
 
-    PREV(list, NEXT(list, position)) = HEAD(list);
+    PREV(list, NEXT(list, position)) = idx_to_push_into;
 
-    NEXT(list, HEAD(list)) = NEXT(list, position);
-    NEXT(list, position) = HEAD(list);
-    VALUE(list, HEAD(list)) = value;
-    PREV(list, HEAD(list)) = position;
+    NEXT(list, idx_to_push_into) = NEXT(list, position);
+    NEXT(list, position) = idx_to_push_into;
+    VALUE(list, idx_to_push_into) = value;
+    PREV(list, idx_to_push_into) = position;
 
     EXIT_ERR(list_error(list));
 
@@ -130,23 +96,23 @@ int list_push(struct list *list, size_t position, list_elem_t value) {
 }
 
 
-int pop(struct list *list, size_t position, list_elem_t *value) { // TODO: not finished
+int list_pop(struct list *list, size_t position, list_elem_t *value) {
     EXIT_ERR(list_error(list));
 
-    if (position < 1 || position >= SIZE(list))
+    if (position < 1 || position >= SIZE(list) - 1)
         return LIST_CANT_POP;
 
     if (value != NULL)
         *value = VALUE(list, position);
 
+
     VALUE(list, position) = LIST_POISON;
-    NEXT(list, PREV(list, position)) = 0;
+    NEXT(list, PREV(list, position)) = NEXT(list, position);
+    PREV(list, NEXT(list, position)) = PREV(list, position);
     NEXT(list, position) = LIST_NO_NEXT;
 
     PREV(list, position) = FREE(list);
     FREE(list) = position;
-
-    HEAD(list) = PREV(list, position);
 
     EXIT_ERR(list_error(list));
 

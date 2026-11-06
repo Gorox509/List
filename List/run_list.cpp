@@ -24,10 +24,12 @@ int run_list(int argc, char *argv[]) {
     list_push_back(list, 6);
     //list_push_back(list, 8);
     //list_push_back(list, 9);
-    //list_push(list, 2, 9);
+    list_push(list, 0, 9);
+    list_push(list, 6, 156);
 
     ssize_t value = 0;
-    //list_pop_back(list, &value);
+    list_pop(list, 2, &value);
+    list_pop_back(list, &value);
     fprintf(stderr, "%zd\n", value);
 
     value = 0;

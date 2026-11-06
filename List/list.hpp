@@ -77,7 +77,7 @@ bool list_is_free_element(struct list *list, size_t idx);
 int list_push_back( struct list *list, list_elem_t value);
 int list_pop_back(  struct list *list, list_elem_t *value);
 int list_push(      struct list *list, size_t position, list_elem_t value);
-int pop(            struct list *list, size_t position, list_elem_t *value);
+int list_pop(       struct list *list, size_t position, list_elem_t *value);
 
 
 

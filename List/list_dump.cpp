@@ -7,6 +7,7 @@ static FILE *open_log_file( const char *filename);
 static int  close_log_file( FILE *fp);
 static void print_divisor(  FILE *fp);
 static void list_print_error(FILE *fp, int err_code);
+static int  get_comment(    struct list *list, size_t position, const char *comment[]);
 
 
 void list_dump(struct list *list, int error) { // TODO: get error
@@ -35,10 +36,12 @@ void list_dump(struct list *list, int error) { // TODO: get error
         fprintf(fp, "Can not print list elements\n");
     }
 
-    fprintf(fp, "%10s%10s%10s%10s\n", "idx", "data", "next_idx", "prev_idx");
+    fprintf(fp, "%10s%10s%10s%10s%10s\n", "idx", "data", "next_idx", "prev_idx", "comment");
 
     while (idx < SIZE(list)) {
-        fprintf(fp, "%10zu%10zd%10zu%10zu\n", idx, VALUE(list, idx), NEXT(list, idx), PREV(list, idx));
+        const char *comment = NULL;
+        get_comment(list, idx, &comment);
+        fprintf(fp, "%10zu%10zd%10zu%10zu%20s\n", idx, VALUE(list, idx), NEXT(list, idx), PREV(list, idx), comment);
         ++idx;
     }
 
@@ -97,6 +100,14 @@ void list_print_error(FILE *fp, int err_code) {
             fprintf(fp, "Error: list terminator element is wrong\n");
             return;
 
+        case LIST_CANT_PUSH:
+            fprintf(fp, "Warning: cannot push: wrong index\n");
+            return;
+
+        case LIST_CANT_POP:
+            fprintf(fp, "Warning: cannot pop: wrong index\n");
+            return;
+
         default:
             fprintf(fp, "Unknown error\n");
             return;
@@ -129,4 +140,38 @@ void print_divisor(FILE *fp) {
 
     fprintf(fp, "======================================================================"
                 "==============================\n");
+}
+
+
+int get_comment(struct list *list, size_t position, const char *comment[]) {
+    assert(list != NULL); // comment may be zero at first
+
+    if (position == 0) {
+        *comment = "<- Tech. element";
+        return LIST_OK;
+    }
+    if (position == HEAD(list) && HEAD(list) == TAIL(list)) {
+        *comment = "<- HEAD, TAIL";
+        return LIST_OK;
+    }
+    if (position == HEAD(list)) {
+        *comment = "<- HEAD";
+        return LIST_OK;
+    }
+    if (position == TAIL(list)) {
+        *comment = "<- TAIL";
+        return LIST_OK;
+    }
+    if (position == FREE(list)) {
+        *comment = "<- first free";
+        return LIST_OK;
+    }
+    if (list_is_free_element(list, position)) {
+        *comment = "<- free";
+        return LIST_OK;
+    }
+
+    *comment = "";
+
+    return LIST_OK;
 }
